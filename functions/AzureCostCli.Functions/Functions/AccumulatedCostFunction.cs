@@ -87,7 +87,7 @@ public class AccumulatedCostFunction
                 forecastedCosts = (await _costRetriever.RetrieveForecastedCosts(false, scope!, Array.Empty<string>(), metric, TimeframeType.Custom, forecastStartDate, forecastEndDate)).ToList();
             }
 
-            var byServiceName = await _costRetriever.RetrieveCostByServiceName(false, scope!, Array.Empty<string>(), metric, timeframe, fromDate, toDate);
+            var byServiceNames = await _costRetriever.RetrieveCostByServiceName(false, scope!, Array.Empty<string>(), metric, timeframe, fromDate, toDate);
             var byLocation = await _costRetriever.RetrieveCostByLocation(false, scope!, Array.Empty<string>(), metric, timeframe, fromDate, toDate);
             var byResourceGroup = await _costRetriever.RetrieveCostByResourceGroup(false, scope!, Array.Empty<string>(), metric, timeframe, fromDate, toDate);
 
@@ -96,14 +96,14 @@ public class AccumulatedCostFunction
                 totals = new
                 {
                     todaysCost = costs.Where(a => a.Date == today).Sum(a => useUsd ? a.CostUsd : a.Cost),
-                    yesterdayCost = costs.Where(a => a.Date == today.AddDays(-1)).Sum(a => useUsd ? a.CostUsd : a.Cost),
+                    yesterdaysCost = costs.Where(a => a.Date == today.AddDays(-1)).Sum(a => useUsd ? a.CostUsd : a.Cost),
                     lastSevenDaysCost = costs.Where(a => a.Date >= today.AddDays(-7)).Sum(a => useUsd ? a.CostUsd : a.Cost),
                     lastThirtyDaysCost = costs.Where(a => a.Date >= today.AddDays(-30)).Sum(a => useUsd ? a.CostUsd : a.Cost),
                     totalCostInTimeframe = costs.Sum(a => useUsd ? a.CostUsd : a.Cost)
                 },
                 cost = costs.OrderBy(a => a.Date).Select(a => new { a.Date, a.Cost, a.Currency, a.CostUsd }),
                 forecastedCosts = forecastedCosts.OrderByDescending(a => a.Date).Select(a => new { a.Date, a.Cost, a.Currency, a.CostUsd }),
-                byServiceNames = byServiceName.OrderByDescending(a => a.Cost).Select(a => new { ServiceName = a.ItemName, a.Cost, a.Currency, a.CostUsd }),
+                byServiceNames = byServiceNames.OrderByDescending(a => a.Cost).Select(a => new { ServiceName = a.ItemName, a.Cost, a.Currency, a.CostUsd }),
                 byLocation = byLocation.OrderByDescending(a => a.Cost).Select(a => new { Location = a.ItemName, a.Cost, a.Currency, a.CostUsd }),
                 byResourceGroup = byResourceGroup.OrderByDescending(a => a.Cost).Select(a => new { ResourceGroup = a.ItemName, a.Cost, a.Currency, a.CostUsd })
             };

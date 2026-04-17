@@ -8,7 +8,9 @@ var host = new HostBuilder()
     .ConfigureFunctionsWorkerDefaults()
     .ConfigureServices(services =>
     {
-        // Register HTTP clients matching the CLI setup
+        // Register HTTP clients matching the CLI setup.
+        // Note: CostApi/PriceApi use PollyExtensions (Infrastructure) while RegionsApi uses
+        // PollyPolicyExtensions (CostApi) — this mirrors the original CLI DI configuration.
         services.AddHttpClient("CostApi", client =>
         {
             client.BaseAddress = new Uri("https://management.azure.com/");
