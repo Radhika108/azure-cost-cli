@@ -115,6 +115,9 @@ public class DiffCommand : AsyncCommand<DiffSettings>
             _costRetriever.CostApiAddress = settings.CostApiAddress;
             _costRetriever.HttpTimeout = TimeSpan.FromSeconds(settings.HttpTimeout);
 
+            // Authenticate before making any API calls
+            await _costRetriever.EnsureAuthenticatedAsync(settings.Debug, cancellationToken);
+
             await AnsiConsoleExt.Status()
                 .StartAsync("Fetching cost data...", async ctx =>
                 {

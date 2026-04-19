@@ -32,6 +32,9 @@ public class AccumulatedCostCommand : AsyncCommand<AccumulatedCostSettings>
         _costRetriever.CostApiAddress = settings.CostApiAddress;
         _costRetriever.HttpTimeout = TimeSpan.FromSeconds(settings.HttpTimeout);
 
+        // Authenticate before making any API calls
+        await _costRetriever.EnsureAuthenticatedAsync(settings.Debug, cancellationToken);
+
         // Get the subscription ID from the settings (already validated and set in Validate method)
         var subscriptionId = settings.Subscription;
 

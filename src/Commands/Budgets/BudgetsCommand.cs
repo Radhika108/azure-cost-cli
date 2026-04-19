@@ -29,6 +29,9 @@ public class BudgetsCommand : AsyncCommand<BudgetsSettings>
         _costRetriever.CostApiAddress = settings.CostApiAddress;
         _costRetriever.HttpTimeout = TimeSpan.FromSeconds(settings.HttpTimeout);
 
+        // Authenticate before making any API calls
+        await _costRetriever.EnsureAuthenticatedAsync(settings.Debug, cancellationToken);
+
         // Fetch the details from the Azure Cost Management API
         var budgets = await _costRetriever.RetrieveBudgets(settings.Debug, settings.GetScope);
 

@@ -31,6 +31,9 @@ public class DetectAnomalyCommand : AsyncCommand<DetectAnomalySettings>
         _costRetriever.CostApiAddress = settings.CostApiAddress;
         _costRetriever.HttpTimeout = TimeSpan.FromSeconds(settings.HttpTimeout);
 
+        // Authenticate before making any API calls
+        await _costRetriever.EnsureAuthenticatedAsync(settings.Debug, cancellationToken);
+
         // Fetch the costs from the Azure Cost Management API
         var dailyCost = await _costRetriever.RetrieveDailyCost(settings.Debug, settings.GetScope,
             settings.Filter,

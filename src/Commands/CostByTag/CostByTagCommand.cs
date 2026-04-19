@@ -32,6 +32,9 @@ public class CostByTagCommand : AsyncCommand<CostByTagSettings>
         _costRetriever.CostApiAddress = settings.CostApiAddress;
         _costRetriever.HttpTimeout = TimeSpan.FromSeconds(settings.HttpTimeout);
 
+        // Authenticate before making any API calls
+        await _costRetriever.EnsureAuthenticatedAsync(settings.Debug, cancellationToken);
+
         IEnumerable<CostResourceItem> resources = Enumerable.Empty<CostResourceItem>();
 
         await AnsiConsoleExt.Status()

@@ -64,6 +64,11 @@ public class AzureCostApiRetriever : ICostRetriever
         }
     }
 
+    public async Task EnsureAuthenticatedAsync(bool debug, CancellationToken cancellationToken = default)
+    {
+        await RetrieveToken(debug);
+    }
+
     private async Task RetrieveToken(bool includeDebugOutput)
     {
         if (_tokenRetrieved)

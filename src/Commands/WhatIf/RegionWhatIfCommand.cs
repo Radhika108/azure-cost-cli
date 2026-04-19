@@ -32,6 +32,9 @@ public class RegionWhatIfCommand : AsyncCommand<WhatIfSettings>
         _costRetriever.CostApiAddress = settings.CostApiAddress;
         _priceRetriever.PriceApiAddress = settings.PriceApiAddress;
 
+        // Authenticate before making any API calls
+        await _costRetriever.EnsureAuthenticatedAsync(settings.Debug, cancellationToken);
+
         // Fetch the costs from the Azure Cost Management API
         IEnumerable<UsageDetails> resources;
         Dictionary<UsageDetails, List<PriceRecord>> pricesByRegion = new();
