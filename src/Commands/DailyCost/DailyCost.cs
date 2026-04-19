@@ -32,6 +32,9 @@ public class DailyCostCommand : AsyncCommand<DailyCostSettings>
         _costRetriever.CostApiAddress = settings.CostApiAddress;
         _costRetriever.HttpTimeout = TimeSpan.FromSeconds(settings.HttpTimeout);
 
+        // Authenticate before making any API calls
+        await _costRetriever.EnsureAuthenticatedAsync(settings.Debug, cancellationToken);
+
         IEnumerable<CostDailyItem> dailyCost = Enumerable.Empty<CostDailyItem>();
 
         // if output format is not csv, json, or jsonc, then don't include tags

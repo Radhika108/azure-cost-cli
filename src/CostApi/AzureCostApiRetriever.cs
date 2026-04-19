@@ -64,7 +64,12 @@ public class AzureCostApiRetriever : ICostRetriever
         }
     }
 
-    private async Task RetrieveToken(bool includeDebugOutput)
+    public async Task EnsureAuthenticatedAsync(bool debug, CancellationToken cancellationToken = default)
+    {
+        await RetrieveToken(debug, cancellationToken);
+    }
+
+    private async Task RetrieveToken(bool includeDebugOutput, CancellationToken cancellationToken = default)
     {
         if (_tokenRetrieved)
             return;
@@ -78,7 +83,7 @@ public class AzureCostApiRetriever : ICostRetriever
             AnsiConsole.WriteLine($"Using token credential: {tokenCredential.GetType().Name} to fetch a token.");
 
         var token = await tokenCredential.GetTokenAsync(new TokenRequestContext(new[]
-            { $"{CostApiAddress}.default" }));
+            { $"{CostApiAddress}.default" }), cancellationToken);
 
         if (includeDebugOutput)
             AnsiConsole.WriteLine($"Token retrieved and expires at: {token.ExpiresOn}");

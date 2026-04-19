@@ -31,6 +31,9 @@ public class DevTestWhatIfCommand : AsyncCommand<WhatIfSettings>
         _costRetriever.CostApiAddress = settings.CostApiAddress;
         _priceRetriever.PriceApiAddress = settings.PriceApiAddress;
 
+        // Authenticate before making any API calls
+        await _costRetriever.EnsureAuthenticatedAsync(settings.Debug, cancellationToken);
+
         IEnumerable<UsageDetails> resources = Enumerable.Empty<UsageDetails>();
         List<DevTestComparisonItem> comparisonItems = new();
 

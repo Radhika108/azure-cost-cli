@@ -7,6 +7,8 @@ public interface ICostRetriever
     public string CostApiAddress { get; set; }
     public TimeSpan HttpTimeout { get; set; }
 
+    Task EnsureAuthenticatedAsync(bool debug, CancellationToken cancellationToken = default);
+
     Task<Subscription> RetrieveSubscription(bool includeDebugOutput, Guid subscriptionId);
     
     Task<IEnumerable<CostItem>> RetrieveCosts(bool includeDebugOutput, Scope scope,
